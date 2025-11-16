@@ -5,6 +5,7 @@ import {
     deleteProduct,
     returnProduct,
     registerProduct,
+    updateProduct,
 } from "../../Toolkit/Slices/ProductSlice.js";
 import { FaTrash, FaUndo, FaPlus, FaMinus } from "react-icons/fa";
 import { notify } from "../../Components/UI/notify.jsx";
@@ -19,7 +20,7 @@ import ImageUploading from "react-images-uploading";
 
 const ProductsControl = () => {
     const [images, setImages] = useState([]);
-    const maxNumber = 10; // առավելագույն 10 նկար
+    const maxNumber = 10;
 
     const dispatch = useDispatch();
     const { products, deletedProducts, loading, error } = useSelector(
@@ -54,70 +55,105 @@ const ProductsControl = () => {
     const handleAddProduct = async (data) => {
         const { newProdName, price, specs } = data;
 
+        console.log('🚀 Starting product registration...');
+        console.log('Form data:', { newProdName, price, specs });
+        console.log('Images count:', images.length);
+
         if (!newProdName || !price || images.length === 0) {
             notify("Please fill all fields and upload at least one image", "red");
             return;
         }
 
         setUploading(true);
+        let registeredProductId = null;
 
         try {
-            // 1. Ստեղծել ապրանքը (ստանալ ID)
+            // ====== ШАГ 1: Ստեղծել ապրանքը առանց նկարների ======
+            console.log('📝 Step 1: Creating product without images...');
             const registerResult = await dispatch(
                 registerProduct({
                     newProdName,
                     price: Number(price),
                     specs: specs || null,
-                    images: [], // ժամանակավորապես դատարկ
+                    images: [], // Ժամանակավոր դատարկ
                 })
             ).unwrap();
 
-            const productId = registerResult.id;
+            registeredProductId = registerResult.id;
+            console.log('✅ Product created with ID:', registeredProductId);
 
-            // 2. Վերբեռնել նկարները
+            // ====== ШАГ 2: Վերբեռնել նկարները ======
+            console.log('📤 Step 2: Uploading images...');
             const formData = new FormData();
-            images.forEach((image) => {
+
+            images.forEach((image, index) => {
                 if (image.file) {
                     formData.append("images", image.file);
+                    console.log(`Adding image ${index + 1}:`, image.file.name);
                 }
             });
-            formData.append("productId", productId);
+
+            formData.append("productId", registeredProductId);
 
             const uploadResponse = await fetch("http://localhost:4000/api/upload-images", {
                 method: "POST",
                 body: formData,
             });
 
-            if (!uploadResponse.ok) throw new Error("Image upload failed");
+            console.log('Upload response status:', uploadResponse.status);
+
+            if (!uploadResponse.ok) {
+                const errorData = await uploadResponse.json();
+                console.error('❌ Upload failed:', errorData);
+                throw new Error(errorData.error || "Image upload failed");
+            }
 
             const uploadData = await uploadResponse.json();
+            console.log('✅ Images uploaded:', uploadData.images);
 
-            // 3. Թարմացնել ապրանքը նկարների URL-ներով
+            // ====== ШАГ 3: Թարմացնել ապրանքը նկարներով ======
+            console.log('🔄 Step 3: Updating product with images...');
             await dispatch(
-                registerProduct({
-                    id: productId,
-                    newProdName,
-                    price: Number(price),
-                    specs: specs || null,
-                    images: uploadData.images,
+                updateProduct({
+                    id: registeredProductId,
+                    data: {
+                        images: uploadData.images,
+                    }
                 })
             ).unwrap();
 
+            console.log('✅ Product updated successfully!');
             notify("Product registered with images!", "green");
+
+            // Reset form
             reset();
             setImages([]);
             setShowForm(false);
+
+            // Reload products
             dispatch(fetchProducts());
 
         } catch (err) {
-            console.error("Product registration failed:", err);
-            notify("Failed to register product", "red");
+            console.error("❌ Product registration failed:", err);
+            notify(err.message || "Failed to register product", "red");
+
+            // Rollback: ջնջել ապրանքը, եթե ստեղծվել է
+            if (registeredProductId) {
+                console.log('🔄 Rolling back - deleting product:', registeredProductId);
+                try {
+                    await dispatch(deleteProduct(registeredProductId)).unwrap();
+                    console.log('✅ Product deleted (rollback)');
+                } catch (deleteErr) {
+                    console.error('❌ Rollback failed:', deleteErr);
+                }
+            }
         } finally {
             setUploading(false);
         }
     };
 
     const onImageChange = (imageList) => {
+        console.log('📸 Images changed:', imageList.length);
         setImages(imageList);
     };
 
@@ -252,7 +288,7 @@ const ProductsControl = () => {
                         </div>
 
                         {/* Form Fields */}
-                        <div className="space-y-4">
+                        <div className="col-span-2 space-y-4">
                             <InputNewProd
                                 type="text"
                                 placeholder="Product Name *"
@@ -297,108 +333,90 @@ const ProductsControl = () => {
             )}
 
             {/* Registered Products */}
-            <section className="mb-12">
-                <h2 className="text-2xl font-semibold text-gray-700 mb-4">
+            <div className="mb-12">
+                <h2 className="text-2xl font-semibold mb-4 text-gray-800">
                     Registered Products ({products.length})
                 </h2>
-                {products.length === 0 && !loading ? (
-                    <p className="text-gray-500 italic text-center py-8 bg-white rounded-xl shadow">
-                        No products registered yet.
-                    </p>
+                {products.length === 0 ? (
+                    <p className="text-gray-500 text-center py-8">No products registered yet</p>
                 ) : (
-                    <div className="grid gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {products.map((product) => (
                             <div
                                 key={product.id}
-                                className="bg-white p-5 rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition flex gap-4"
+                                className="bg-white p-4 rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition"
                             >
-                                {/* Product Images */}
                                 {product.images && product.images.length > 0 && (
-                                    <div className="flex gap-1 flex-shrink-0">
-                                        {product.images.slice(0, 3).map((src, i) => (
-                                            <img
-                                                key={i}
-                                                src={src}
-                                                alt={`${product.name} ${i + 1}`}
-                                                className="w-16 h-16 object-cover rounded border shadow-sm"
-                                            />
-                                        ))}
-                                        {product.images.length > 3 && (
-                                            <div className="w-16 h-16 bg-gray-200 rounded flex items-center justify-center text-xs text-gray-600">
-                                                +{product.images.length - 3}
-                                            </div>
-                                        )}
-                                    </div>
+                                    <img
+                                        src={`http://localhost:4000${product.images[0]}`}
+                                        alt={product.name}
+                                        className="w-full h-48 object-cover rounded-md mb-4 bg-gray-200"
+                                        onError={(e) => {
+                                            e.target.onerror = null; // Կանխել loop-ը
+                                            e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="200"%3E%3Crect fill="%23ddd" width="300" height="200"/%3E%3Ctext fill="%23999" font-family="sans-serif" font-size="16" x="50%25" y="50%25" text-anchor="middle" dy=".3em"%3ENo Image%3C/text%3E%3C/svg%3E';
+                                        }}
+                                    />
                                 )}
-
-                                {/* Product Info */}
-                                <div className="flex-1">
-                                    <h3 className="font-semibold text-lg text-gray-800">
-                                        {product.name}
-                                    </h3>
-                                    <p className="text-gray-600">Price: ${product.price}</p>
-                                    {product.specs && (
-                                        <p className="text-gray-500 text-sm mt-1">
-                                            Specs: {product.specs}
-                                        </p>
-                                    )}
-                                </div>
-
-                                {/* Delete Button */}
+                                <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                                    {product.name}
+                                </h3>
+                                <p className="text-gray-600 mb-2">Price: ${product.price}</p>
+                                {product.specs && (
+                                    <p className="text-sm text-gray-500 mb-4">Specs: {product.specs}</p>
+                                )}
+                                {product.images && product.images.length > 1 && (
+                                    <p className="text-xs text-gray-400 mb-4">
+                                        +{product.images.length - 1} more images
+                                    </p>
+                                )}
                                 <button
                                     onClick={() => handleDelete(product)}
-                                    className="text-red-600 hover:text-red-800 text-xl transition self-center"
-                                    title="Delete"
+                                    className="w-full flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition"
                                 >
-                                    <FaTrash />
+                                    <FaTrash /> Delete
                                 </button>
                             </div>
                         ))}
                     </div>
                 )}
-            </section>
+            </div>
 
             {/* Deleted Products */}
             {deletedProducts.length > 0 && (
-                <section className="mb-12">
-                    <h2 className="text-2xl font-semibold text-gray-700 mb-4">
+                <div>
+                    <h2 className="text-2xl font-semibold mb-4 text-gray-800">
                         Deleted Products ({deletedProducts.length})
                     </h2>
-                    <div className="grid gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {deletedProducts.map((product) => (
                             <div
                                 key={product.id}
-                                className="bg-white p-5 rounded-xl shadow-sm border border-red-200 opacity-75 flex gap-4 items-center"
+                                className="bg-gray-100 p-4 rounded-lg shadow-md border border-gray-300 opacity-75"
                             >
                                 {product.images && product.images.length > 0 && (
                                     <img
-                                        src={product.images[0]}
+                                        src={`http://localhost:4000${product.images[0]}`}
                                         alt={product.name}
-                                        className="w-16 h-16 object-cover rounded border"
+                                        className="w-full h-48 object-cover rounded-md mb-4"
+                                        onError={(e) => {
+                                            e.target.src = 'https://via.placeholder.com/300x200?text=No+Image';
+                                        }}
                                     />
                                 )}
-                                <div className="flex-1">
-                                    <h3 className="font-semibold text-lg text-gray-600 line-through">
-                                        {product.name}
-                                    </h3>
-                                    <p className="text-gray-500">Price: ${product.price}</p>
-                                    {product.specs && (
-                                        <p className="text-gray-400 text-sm mt-1">
-                                            Specs: {product.specs}
-                                        </p>
-                                    )}
-                                </div>
+                                <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                                    {product.name}
+                                </h3>
+                                <p className="text-gray-600 mb-2">Price: ${product.price}</p>
                                 <button
                                     onClick={() => handleReturn(product)}
-                                    className="text-green-600 hover:text-green-800 text-xl transition"
-                                    title="Restore"
+                                    className="w-full flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition"
                                 >
-                                    <FaUndo />
+                                    <FaUndo /> Restore
                                 </button>
                             </div>
                         ))}
                     </div>
-                </section>
+                </div>
             )}
         </div>
     );

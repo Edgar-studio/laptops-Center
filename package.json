@@ -8,14 +8,17 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "server": "node server.js",
-    "start": "concurrently \"npm run dev\" \"npm run server\" "
+    "server": "npx json-server --watch db.json -p 5000",
+    "serverImages": "node server.js",
+    "start": "concurrently \"npm run dev\" \"npm run server\" \"npm run serverImages\" "
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.9.2",
     "@tailwindcss/vite": "^4.1.16",
     "axios": "^1.13.1",
     "concurrently": "^9.2.1",
+    "cors": "^2.8.5",
+    "multer": "^2.0.2",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-hook-form": "^7.65.0",
@@ -35,7 +38,7 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.22",
     "globals": "^16.4.0",
-    "json-server": "^1.0.0-beta.3",
+    "json-server": "^0.17.4",
     "vite": "^7.1.7"
   }
 }

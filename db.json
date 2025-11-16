@@ -50,18 +50,34 @@
       "isDeleted": false
     },
     {
-      "id": "5df4",
-      "name": "Proddd 333",
-      "price": 50000,
-      "specs": "asfsafasfasfsaf",
-      "isDeleted": true
+      "name": "sdafaf",
+      "price": 34543,
+      "specs": "dsdgsdg",
+      "images": [
+        "/uploadedImages/Products/1qk8xHv/images-1763311348219-645623894.png"
+      ],
+      "isDeleted": false,
+      "id": "1qk8xHv"
     },
     {
-      "id": "2d46",
-      "name": "asfdasfsaf",
-      "price": 2352553,
-      "specs": "asdsaasfasf",
-      "isDeleted": true
+      "name": "asdasd",
+      "price": 235235,
+      "specs": "dfsf",
+      "images": [
+        "/uploadedImages/Products/FKKoeDn/images-1763311717977-780515515.png"
+      ],
+      "isDeleted": false,
+      "id": "FKKoeDn"
+    },
+    {
+      "name": "sdaasd",
+      "price": 2354235,
+      "specs": "sdgsdg",
+      "images": [
+        "/uploadedImages/Products/t6TP8jm/images-1763311756345-232714293.png"
+      ],
+      "isDeleted": false,
+      "id": "t6TP8jm"
     }
   ]
 }

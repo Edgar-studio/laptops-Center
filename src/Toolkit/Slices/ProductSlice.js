@@ -63,6 +63,21 @@ export const returnProduct = createAsyncThunk(
     }
 );
 
+// ProductSlice.js-ում ավելացրու
+export const updateProduct = createAsyncThunk("products/updateProduct",
+    async ({id, data}, {rejectWithValue}) => {
+        try {
+            const response = await api.patch(`/products/${id}`, data);
+            return response.data;
+        } catch (err) {
+            return rejectWithValue(err.message);
+        }
+    }
+)
+
+    // extraReducers-ում ավելացրու
+
+
 const productsSlice = createSlice({
     name: "products",
     initialState: {
@@ -103,6 +118,11 @@ const productsSlice = createSlice({
             .addCase(registerProduct.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
+            })
+            .addCase(updateProduct.fulfilled, (state, action) => {
+                state.products = state.products.map(product =>
+                    product.id === action.payload.id ? action.payload : product
+                );
             })
 
             // === DELETE PRODUCT ===
