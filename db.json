@@ -1,0 +1,67 @@
+{
+  "users": [
+    {
+      "id": "28vd",
+      "username": "Admin",
+      "email": "admin@mail.ru",
+      "role": "admin",
+      "password": "Admin123@",
+      "blocked": false
+    },
+    {
+      "id": "2cc5",
+      "username": "PerniCzech",
+      "email": "samvel1973@seznam.cz",
+      "role": "user",
+      "password": "asAAS123@",
+      "deleted": false,
+      "blocked": false
+    },
+    {
+      "id": "3227",
+      "username": "sgdsfhsdh",
+      "email": "samfhvel1973@seznam.cds",
+      "role": "user",
+      "password": "YTGHFhg543@",
+      "deleted": false,
+      "blocked": false
+    }
+  ],
+  "products": [
+    {
+      "id": "1",
+      "name": "Dell XPS 15",
+      "price": "1499",
+      "specs": "i7, 16GB RAM, 512GB SSD, RTX 3050",
+      "isDeleted": false
+    },
+    {
+      "id": "2",
+      "name": "MacBook Pro 14",
+      "price": "1999",
+      "specs": "M2 Pro, 16GB RAM, 1TB SSD",
+      "isDeleted": false
+    },
+    {
+      "id": "3",
+      "name": "HP Spectre x360",
+      "price": "1299",
+      "specs": "i5, 8GB RAM, 256GB SSD, 2-in-1",
+      "isDeleted": false
+    },
+    {
+      "id": "5df4",
+      "name": "Proddd 333",
+      "price": 50000,
+      "specs": "asfsafasfasfsaf",
+      "isDeleted": true
+    },
+    {
+      "id": "2d46",
+      "name": "asfdasfsaf",
+      "price": 2352553,
+      "specs": "asdsaasfasf",
+      "isDeleted": true
+    }
+  ]
+}
