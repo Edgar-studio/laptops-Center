@@ -7,6 +7,9 @@ import History from "../Pages/Private Pages/History.jsx";
 import Products from "../Pages/Private Pages/Products.jsx";
 import UsersControl from "../Pages/Admin Pages/UsersControl.jsx";
 import ProductsControl from "../Pages/Admin Pages/ProductsControl.jsx";
+import {BiHome} from "react-icons/bi";
+import {Clock, Info} from "lucide-react";
+
 
 export const LOGIN_PAGE = "/login"
 export const REGISTER_PAGE = "/register"
@@ -29,9 +32,9 @@ export const Public_routes = [
 
 
 export const Private_routes = [
-    {path: HOME_PAGE, element: <Home />, name: "Home" },
-    {path: ABOUT_PAGE, element: <About />, name: "About" },
-    {path: HISTORY_PAGE, element: <History />, name: "History" },
+    {path: HOME_PAGE, element: <Home />, name: "Home", icon: <BiHome size={20} /> },
+    {path: ABOUT_PAGE, element: <About />, name: "About", icon: <Info size={20}/> },
+    {path: HISTORY_PAGE, element: <History />, name: "History", icon: <Clock size={20} /> },
     {path: PRODUCTS_PAGE, element: <Products />},
 
     {path: '*', element: <Navigate to={HOME_PAGE} />},

@@ -2,7 +2,13 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUsers } from "../../Toolkit/Slices/AuthSlice.js";
 import { fetchProducts } from "../../Toolkit/Slices/ProductSlice.js";
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
 
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+import 'swiper/css/scrollbar';
 const Home = () => {
     const dispatch = useDispatch();
 
@@ -24,9 +30,11 @@ const Home = () => {
 
     const closeModal = () => setSelectedProduct(null);
     useEffect(() => {
+        console.log(selectedProduct);
         const handleEsc = (e) => e.key === "Escape" && closeModal();
         if (selectedProduct) document.addEventListener("keydown", handleEsc);
         return () => document.removeEventListener("keydown", handleEsc);
+
     }, [selectedProduct]);
 
     return (
@@ -97,12 +105,31 @@ const Home = () => {
                         </button>
 
                         <div className="mb-6">
-                            {selectedProduct.image ? (
-                                <img
-                                    src={selectedProduct.image}
-                                    alt={selectedProduct.name}
-                                    className="w-full h-64 object-cover rounded-xl"
-                                />
+                            {selectedProduct.images?.length > 0 ? (
+                                // <img
+                                //     src={selectedProduct.image}
+                                //     alt={selectedProduct.name}
+                                //
+                                // />
+
+
+                                <Swiper
+                                    cssMode={true}
+                                    className="mySwiper"
+                                    modules={[Navigation, Pagination, Scrollbar, A11y]}
+                                    spaceBetween={50}
+                                    slidesPerView={1}
+                                    navigation={true}
+                                    onSlideChange={() => console.log('slide change')}
+                                    onSwiper={(swiper) => console.log(swiper)}
+                                >
+                                    {selectedProduct.images?.map((image) => (
+                                        <SwiperSlide
+                                            // className='flex items-center justify-center'
+                                        ><img src={image} alt=""/></SwiperSlide>
+                                    ))}
+
+                                </Swiper>
                             ) : (
                                 <div className="bg-gray-200 border-2 border-dashed rounded-xl w-full h-64 flex items-center justify-center">
                                     <span className="text-gray-500 text-xl">No Image Available</span>

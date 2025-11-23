@@ -56,7 +56,7 @@
       "images": [
         "/uploadedImages/Products/1qk8xHv/images-1763311348219-645623894.png"
       ],
-      "isDeleted": false,
+      "isDeleted": true,
       "id": "1qk8xHv"
     },
     {
@@ -66,7 +66,7 @@
       "images": [
         "/uploadedImages/Products/FKKoeDn/images-1763311717977-780515515.png"
       ],
-      "isDeleted": false,
+      "isDeleted": true,
       "id": "FKKoeDn"
     },
     {
@@ -76,8 +76,21 @@
       "images": [
         "/uploadedImages/Products/t6TP8jm/images-1763311756345-232714293.png"
       ],
-      "isDeleted": false,
+      "isDeleted": true,
       "id": "t6TP8jm"
+    },
+    {
+      "name": "awerwe",
+      "price": 1000,
+      "specs": "asfasfasfa",
+      "images": [
+        "/uploadedImages/Products/Iyd_D0b/images-1763896534662-15352939.jpeg",
+        "/uploadedImages/Products/Iyd_D0b/images-1763896534664-504135091.jpeg",
+        "/uploadedImages/Products/Iyd_D0b/images-1763896534664-35553044.jpeg",
+        "/uploadedImages/Products/Iyd_D0b/images-1763896534664-432692039.jpeg"
+      ],
+      "isDeleted": false,
+      "id": "Iyd_D0b"
     }
   ]
 }

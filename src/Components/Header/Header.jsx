@@ -6,7 +6,6 @@ import MySidebar from "./Sidebar";
 import { AlignLeft } from "lucide-react";
 
 const Header = () => {
-    const dispatch = useDispatch();
     const [open, setOpen] = useState(false);
 
     const toggleSidebar = () => setOpen(!open);
@@ -24,18 +23,6 @@ const Header = () => {
                     <AlignLeft size={22} />
                 </button>
 
-                <div className="text-white font-bold text-xl ml-16">
-                    Admin Dashboard
-                </div>
-
-                <Menu />
-
-                <button
-                    onClick={() => dispatch(logout())}
-                    className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition"
-                >
-                    Logout
-                </button>
             </header>
         </>
     );

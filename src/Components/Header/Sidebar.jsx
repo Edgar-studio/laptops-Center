@@ -1,20 +1,15 @@
 import React from "react";
 import SidebarLib from "react-sidebar";
-import { Home, AlignLeft, Clock, Info } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import {AlignLeft } from "lucide-react";
+import Menu from "./Menu.jsx";
+import {logout} from "../../Toolkit/Slices/AuthSlice.js";
+import {useDispatch} from "react-redux";
 
-const SidebarItem = ({ icon, label, onClick }) => (
-    <div
-        onClick={onClick}
-        className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-800 cursor-pointer transition"
-    >
-        {icon}
-        <span className="text-sm font-medium">{label}</span>
-    </div>
-);
+
 
 const MySidebar = ({ toggle, open }) => {
-    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const token = localStorage.getItem("token");
 
     return (
         <>
@@ -51,22 +46,17 @@ const MySidebar = ({ toggle, open }) => {
                         </button>
 
                         <div className="flex flex-col gap-3">
-                            <SidebarItem
-                                icon={<Home size={20} />}
-                                label="Home"
-                                onClick={() => navigate("/")}
-                            />
-                            <SidebarItem
-                                icon={<Clock size={20} />}
-                                label="History"
-                                onClick={() => navigate("/history")}
-                            />
-                            <SidebarItem
-                                icon={<Info size={20} />}
-                                label="About"
-                                onClick={() => navigate("/about")}
-                            />
+                            <Menu />
                         </div>
+
+                        {
+                            token &&  <button
+                                onClick={() => dispatch(logout())}
+                                className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition"
+                            >
+                                Logout
+                            </button>
+                        }
                     </div>
                 }
             />
