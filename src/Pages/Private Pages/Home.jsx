@@ -7,17 +7,14 @@ const Home = () => {
     const dispatch = useDispatch();
 
 
-    // Products
     const {
         products,
         loading: prodLoading,
         error: prodError,
     } = useSelector((s) => s.products);
 
-    // Modal state
     const [selectedProduct, setSelectedProduct] = useState(null);
 
-    // Fetch on mount
     useEffect(() => {
         dispatch(fetchProducts());
     }, [dispatch]);
@@ -25,7 +22,6 @@ const Home = () => {
     const loading =  prodLoading;
     const error =  prodError;
 
-    // Close modal
     const closeModal = () => setSelectedProduct(null);
     useEffect(() => {
         const handleEsc = (e) => e.key === "Escape" && closeModal();
@@ -37,10 +33,6 @@ const Home = () => {
         <div className="min-h-screen bg-gray-50 py-8 px-4">
             <div className="max-w-7xl mx-auto">
 
-
-
-
-                {/* ==== PRODUCTS ==== */}
                 <section>
                     <h2 className="text-2xl font-semibold text-gray-700 mb-4">
                         Registered Products ({products.length})
@@ -88,7 +80,6 @@ const Home = () => {
                 </section>
             </div>
 
-            {/* ==== MODAL ==== */}
             {selectedProduct && (
                 <div
                     className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4"
@@ -98,7 +89,6 @@ const Home = () => {
                         className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 relative"
                         onClick={(e) => e.stopPropagation()}
                     >
-                        {/* Close Button */}
                         <button
                             onClick={closeModal}
                             className="absolute top-4 right-4 text-gray-500 hover:text-gray-800 text-2xl"
@@ -106,7 +96,6 @@ const Home = () => {
                             X
                         </button>
 
-                        {/* Image */}
                         <div className="mb-6">
                             {selectedProduct.image ? (
                                 <img
@@ -121,7 +110,6 @@ const Home = () => {
                             )}
                         </div>
 
-                        {/* Details */}
                         <h2 className="text-3xl font-bold text-gray-800 mb-2">
                             {selectedProduct.name}
                         </h2>
@@ -129,7 +117,6 @@ const Home = () => {
                             ${selectedProduct.price}
                         </p>
 
-                        {/* Full Specs */}
                         {selectedProduct.specs && (
                             <div className="bg-gray-50 p-4 rounded-xl">
                                 <h3 className="font-semibold text-gray-700 mb-2">Specifications</h3>

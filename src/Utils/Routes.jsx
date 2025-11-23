@@ -3,6 +3,7 @@ import Register from "../Pages/Public Pages/Register.jsx";
 import { Navigate } from "react-router-dom";
 import Home from "../Pages/Private Pages/Home.jsx";
 import About from "../Pages/Private Pages/About.jsx";
+import History from "../Pages/Private Pages/History.jsx";
 import Products from "../Pages/Private Pages/Products.jsx";
 import UsersControl from "../Pages/Admin Pages/UsersControl.jsx";
 import ProductsControl from "../Pages/Admin Pages/ProductsControl.jsx";
@@ -13,6 +14,7 @@ export const REGISTER_PAGE = "/register"
 
 export const HOME_PAGE = "/"
 export const ABOUT_PAGE = "/about"
+export const HISTORY_PAGE = "/history"
 export const PRODUCTS_PAGE = "/products"
 
 
@@ -29,6 +31,7 @@ export const Public_routes = [
 export const Private_routes = [
     {path: HOME_PAGE, element: <Home />, name: "Home" },
     {path: ABOUT_PAGE, element: <About />, name: "About" },
+    {path: HISTORY_PAGE, element: <History />, name: "History" },
     {path: PRODUCTS_PAGE, element: <Products />},
 
     {path: '*', element: <Navigate to={HOME_PAGE} />},

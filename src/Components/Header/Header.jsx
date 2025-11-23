@@ -1,26 +1,43 @@
-import React from 'react';
+import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { logout } from "../../Toolkit/Slices/AuthSlice.js";
-import Menu from "./Menu.jsx";
+import { logout } from "../../Toolkit/Slices/AuthSlice";
+import Menu from "./Menu";
+import MySidebar from "./Sidebar";
+import { AlignLeft } from "lucide-react";
 
 const Header = () => {
     const dispatch = useDispatch();
+    const [open, setOpen] = useState(false);
+
+    const toggleSidebar = () => setOpen(!open);
 
     return (
-        <header className='w-full h-[10vh] bg-gray-800 flex justify-between items-center px-6 shadow-md'>
-            <div className="text-white font-bold text-xl">
-                Admin Dashboard
-            </div>
+        <>
+            <MySidebar open={open} toggle={toggleSidebar} />
 
-            <Menu />
+            <header className="w-full h-[10vh] bg-gray-800 flex justify-between items-center px-6 shadow-md relative">
 
-            <button
-                onClick={() => dispatch(logout())}
-                className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition-colors duration-200"
-            >
-                Logout
-            </button>
-        </header>
+                <button
+                    onClick={toggleSidebar}
+                    className="absolute left-4 p-2 bg-gray-900 text-white rounded-full w-10 h-10 flex justify-center items-center hover:bg-gray-700 transition"
+                >
+                    <AlignLeft size={22} />
+                </button>
+
+                <div className="text-white font-bold text-xl ml-16">
+                    Admin Dashboard
+                </div>
+
+                <Menu />
+
+                <button
+                    onClick={() => dispatch(logout())}
+                    className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition"
+                >
+                    Logout
+                </button>
+            </header>
+        </>
     );
 };
 
