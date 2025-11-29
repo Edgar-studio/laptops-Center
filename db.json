@@ -56,7 +56,7 @@
       "images": [
         "/uploadedImages/Products/1qk8xHv/images-1763311348219-645623894.png"
       ],
-      "isDeleted": true,
+      "isDeleted": false,
       "id": "1qk8xHv"
     },
     {
@@ -91,6 +91,16 @@
       ],
       "isDeleted": false,
       "id": "Iyd_D0b"
+    },
+    {
+      "name": "rgee",
+      "price": 1000,
+      "specs": "Specs i7 32gb ram 1024gb ssd rtx 4070 ti",
+      "images": [
+        "/uploadedImages/Products/fb2sbK9/images-1764419102058-765854095.png"
+      ],
+      "isDeleted": false,
+      "id": "fb2sbK9"
     }
   ]
 }

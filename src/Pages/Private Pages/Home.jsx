@@ -1,9 +1,16 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import Products from "./Products.jsx";
 
 const Home = () => {
+    return (
+        <div className="min-h-screen bg-gray-100 py-10 px-4">
+            <div className="max-w-7xl mx-auto">
+                <h1 className="text-4xl font-bold text-gray-800 mb-8 text-center">
+                    Our Products
+                </h1>
 
-
+                <Products />
+            </div>
+        </div>
     );
 };
 
