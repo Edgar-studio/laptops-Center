@@ -53,11 +53,12 @@ const ProductsControl = () => {
     };
 
     const handleAddProduct = async (data) => {
-        const { newProdName, price, specs } = data;
-
-        console.log('🚀 Starting product registration...');
-        console.log('Form data:', { newProdName, price, specs });
-        console.log('Images count:', images.length);
+        const { newProdName, price, specs, category } = data;
+        // console.log(category)
+        //
+        // console.log('🚀 Starting product registration...');
+        // console.log('Form data:', { newProdName, price, specs });
+        // console.log('Images count:', images.length);
 
         if (!newProdName || !price || images.length === 0) {
             notify("Please fill all fields and upload at least one image", "red");
@@ -75,6 +76,7 @@ const ProductsControl = () => {
                     newProdName,
                     price: Number(price),
                     specs: specs || null,
+                    category,
                     images: [], // Ժամանակավոր դատարկ
                 })
             ).unwrap();
@@ -123,7 +125,7 @@ const ProductsControl = () => {
             ).unwrap();
 
             console.log('✅ Product updated successfully!');
-            notify("Product registered with images!", "green");
+            // notify("Product registered with images!", "green");
 
             // Reset form
             reset();
@@ -289,6 +291,19 @@ const ProductsControl = () => {
 
                         {/* Form Fields */}
                         <div className="col-span-2 space-y-4">
+
+
+
+                            <select
+                               {...register("category")}
+                            >
+                                <option value="Laptop">Laptop</option>
+                                <option value="Mouse">Mouse</option>
+                                <option value="Keyboard">Keyboard</option>
+                            </select>
+
+
+
                             <InputNewProd
                                 type="text"
                                 placeholder="Product Name *"
@@ -297,6 +312,7 @@ const ProductsControl = () => {
                                 validation={productNameValidation}
                                 error={errors.newProdName?.message}
                             />
+
 
                             <InputNewProd
                                 type="text"
@@ -346,7 +362,7 @@ const ProductsControl = () => {
                                 key={product.id}
                                 className="bg-white p-4 rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition"
                             >
-                                {product.images && product.images.length > 0 && (
+                                { product.images?.length > 0 ? (
                                     <img
                                         src={`http://localhost:4000${product.images[0]}`}
                                         alt={product.name}
@@ -356,7 +372,12 @@ const ProductsControl = () => {
                                             e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="200"%3E%3Crect fill="%23ddd" width="300" height="200"/%3E%3Ctext fill="%23999" font-family="sans-serif" font-size="16" x="50%25" y="50%25" text-anchor="middle" dy=".3em"%3ENo Image%3C/text%3E%3C/svg%3E';
                                         }}
                                     />
-                                )}
+                                ) : <img
+                                    src={'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="200"%3E%3Crect fill="%23ddd" width="300" height="200"/%3E%3Ctext fill="%23999" font-family="sans-serif" font-size="16" x="50%25" y="50%25" text-anchor="middle" dy=".3em"%3ENo Image%3C/text%3E%3C/svg%3E'}
+                                    alt={product.name}
+                                    className="w-full h-48 object-cover rounded-md mb-4 bg-gray-200"
+
+                                />}
                                 <h3 className="text-lg font-semibold text-gray-800 mb-2">
                                     {product.name}
                                 </h3>
@@ -393,16 +414,22 @@ const ProductsControl = () => {
                                 key={product.id}
                                 className="bg-gray-100 p-4 rounded-lg shadow-md border border-gray-300 opacity-75"
                             >
-                                {product.images && product.images.length > 0 && (
+                                {product.images?.length > 0 ? (
                                     <img
                                         src={`http://localhost:4000${product.images[0]}`}
                                         alt={product.name}
                                         className="w-full h-48 object-cover rounded-md mb-4"
                                         onError={(e) => {
-                                            e.target.src = 'https://via.placeholder.com/300x200?text=No+Image';
+                                            e.target.onerror = true; // Կանխել loop-ը
+                                            e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="200"%3E%3Crect fill="%23ddd" width="300" height="200"/%3E%3Ctext fill="%23999" font-family="sans-serif" font-size="16" x="50%25" y="50%25" text-anchor="middle" dy=".3em"%3ENo Image%3C/text%3E%3C/svg%3E';
                                         }}
                                     />
-                                )}
+                                ) : <img
+                                    src={'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="200"%3E%3Crect fill="%23ddd" width="300" height="200"/%3E%3Ctext fill="%23999" font-family="sans-serif" font-size="16" x="50%25" y="50%25" text-anchor="middle" dy=".3em"%3ENo Image%3C/text%3E%3C/svg%3E'}
+                                alt={product.name}
+                                className="w-full h-48 object-cover rounded-md mb-4 bg-gray-200"
+
+                            />}
                                 <h3 className="text-lg font-semibold text-gray-800 mb-2">
                                     {product.name}
                                 </h3>

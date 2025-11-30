@@ -33,15 +33,15 @@ const Products = () => {
                             {products.map((product) => (
                                 <div
                                     key={product.id}
-                                    onClick={() => navigate(`/product/${product.id}`)}
+                                    onClick={() => navigate(`/products/${product.id}`)}
                                     className="bg-white p-5 rounded-xl shadow-sm border border-gray-200
                                     hover:shadow-lg transition cursor-pointer"
                                 >
                                     <div className="bg-gray-200 border-2 border-dashed rounded-xl
                                     w-full h-40 mb-4 flex items-center justify-center overflow-hidden">
-                                        {product.image ? (
+                                        {product.images?.length > 0 ? (
                                             <img
-                                                src={product.image}
+                                                src={product.images[0]}
                                                 alt={product.name}
                                                 className="w-full h-full object-cover"
                                             />

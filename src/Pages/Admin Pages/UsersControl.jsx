@@ -67,18 +67,23 @@ const UsersControl = () => {
                                     <div className="flex gap-3">
                                         <h3 className="font-medium text-gray-800">{user.username}</h3>
                                         <p className="text-sm text-gray-500">{user.email}</p>
+                                        {user.role !== "admin" && (
+                                            <button
+                                                onClick={() => handleDelete(user.id, user.username)}
+                                                className="bg-red-500 hover:bg-red-900 disabled:bg-red-300 flex items-center gap-2 px-3 py-1 rounded"
+                                            >
+                                                <FaTrash /> Delete
+                                            </button>
+
+                                        )}
+                                    {user.role !== "admin" && (
                                         <button
-                                            onClick={() => handleDelete(user.id, user.username)}
-                                            className="bg-red-500 hover:bg-red-900 disabled:bg-red-300 flex items-center gap-2 px-3 py-1 rounded"
-                                        >
-                                            <FaTrash /> Delete
-                                        </button>
-                                        <button
-                                            onClick={() => handleBlock(user)}
-                                            className="bg-blue-500 hover:bg-blue-700 text-white px-3 py-1 rounded"
-                                        >
-                                            {user.blocked ? "Unblock" : "Block"}
-                                        </button>
+                                        onClick={() => handleBlock(user)}
+                                    className="bg-blue-500 hover:bg-blue-700 text-white px-3 py-1 rounded"
+                                >
+                                    {user.blocked ? "Unblock" : "Block"}
+                                </button>
+                                )}
                                     </div>
                                 </div>
                             </div>

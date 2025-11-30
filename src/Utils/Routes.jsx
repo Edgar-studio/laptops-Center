@@ -20,11 +20,11 @@ export const HOME_PAGE = "/"
 export const ABOUT_PAGE = "/about"
 export const HISTORY_PAGE = "/history"
 export const PRODUCTS_PAGE = "/products"
-export const PRODUCTITEM_PAGE = "/product"
 
 
 export const USERS_CONTROL_PAGE = "/userscontrol"
 export const PRODUCTS_CONTROL_PAGE = "/productscontrol"
+
 
 export const Public_routes = [
     {path: LOGIN_PAGE, element: <Login />, name: "Login"},
@@ -37,9 +37,21 @@ export const Private_routes = [
     {path: HOME_PAGE, element: <Home />, name: "Home", icon: <BiHome size={20} /> },
     {path: ABOUT_PAGE, element: <About />, name: "About", icon: <Info size={20}/> },
     {path: HISTORY_PAGE, element: <History />, name: "History", icon: <Clock size={20} /> },
+    {
+        path: PRODUCTS_PAGE,
+        name: "Products" ,
+        children: [
+            {
+                index: true,
+                element: <Products />,
+            },
+            {
+                path: ':id',
+                element: <ProductItemPage />
+            }
+        ]
 
-    {path: PRODUCTS_PAGE, element: <Products />},
-    {path: PRODUCTITEM_PAGE, element: <ProductItemPage />, name: "Products", icon: <Products /> },
+    },
 
     {path: '*', element: <Navigate to={HOME_PAGE} />},
 ]

@@ -6,7 +6,7 @@
       "email": "admin@mail.ru",
       "role": "admin",
       "password": "Admin123@",
-      "blocked": false
+      "blocked": true
     },
     {
       "id": "2cc5",
@@ -50,57 +50,86 @@
       "isDeleted": false
     },
     {
-      "name": "sdafaf",
-      "price": 34543,
-      "specs": "dsdgsdg",
+      "name": "Hisense",
+      "price": 123123,
+      "specs": "wfdsasfasf",
       "images": [
-        "/uploadedImages/Products/1qk8xHv/images-1763311348219-645623894.png"
+        "/uploadedImages/Products/OPzQFJ1/images-1764524987770-437291272.jpeg",
+        "/uploadedImages/Products/OPzQFJ1/images-1764524987772-110408203.jpeg",
+        "/uploadedImages/Products/OPzQFJ1/images-1764524987773-222719823.jpeg",
+        "/uploadedImages/Products/OPzQFJ1/images-1764524987773-695166299.jpeg"
       ],
       "isDeleted": false,
-      "id": "1qk8xHv"
+      "id": "OPzQFJ1"
     },
     {
-      "name": "asdasd",
-      "price": 235235,
-      "specs": "dfsf",
+      "name": "Hisense",
+      "price": 123123,
+      "specs": "wfdsasfasf",
       "images": [
-        "/uploadedImages/Products/FKKoeDn/images-1763311717977-780515515.png"
+        "/uploadedImages/Products/C2cvORv/images-1764525077940-758047139.jpeg"
       ],
+      "isDeleted": false,
+      "id": "C2cvORv"
+    },
+    {
+      "name": "YTFHVGHGB",
+      "price": 12341324,
+      "specs": "sdgfsdg",
+      "images": [
+        "/uploadedImages/Products/HW-bhop/images-1764525092304-278396750.jpeg"
+      ],
+      "isDeleted": false,
+      "id": "HW-bhop"
+    },
+    {
+      "name": "Norrr",
+      "price": 124123,
+      "specs": "qsarfasf",
+      "images": [
+        "/uploadedImages/Products/Kt85g5V/images-1764525168510-239235368.jpeg"
+      ],
+      "isDeleted": false,
+      "id": "Kt85g5V"
+    },
+    {
+      "name": "Norrr",
+      "price": 1324,
+      "specs": "asdfasf",
+      "images": [
+        "/uploadedImages/Products/0Ue3sO8/images-1764525213811-906489679.jpeg"
+      ],
+      "isDeleted": false,
+      "id": "0Ue3sO8"
+    },
+    {
+      "name": "sdgsdg",
+      "price": 2352345,
+      "specs": "dasgfsdgfsdg",
+      "images": [],
       "isDeleted": true,
-      "id": "FKKoeDn"
+      "id": "UJaQw0J"
     },
     {
-      "name": "sdaasd",
-      "price": 2354235,
-      "specs": "sdgsdg",
+      "name": "sdgsdg",
+      "price": 2352345,
+      "specs": "dasgfsdgfsdg",
       "images": [
-        "/uploadedImages/Products/t6TP8jm/images-1763311756345-232714293.png"
-      ],
-      "isDeleted": true,
-      "id": "t6TP8jm"
-    },
-    {
-      "name": "awerwe",
-      "price": 1000,
-      "specs": "asfasfasfa",
-      "images": [
-        "/uploadedImages/Products/Iyd_D0b/images-1763896534662-15352939.jpeg",
-        "/uploadedImages/Products/Iyd_D0b/images-1763896534664-504135091.jpeg",
-        "/uploadedImages/Products/Iyd_D0b/images-1763896534664-35553044.jpeg",
-        "/uploadedImages/Products/Iyd_D0b/images-1763896534664-432692039.jpeg"
+        "/uploadedImages/Products/K22tjZP/images-1764525269055-609727892.jpeg"
       ],
       "isDeleted": false,
-      "id": "Iyd_D0b"
+      "id": "K22tjZP"
     },
     {
-      "name": "rgee",
-      "price": 1000,
-      "specs": "Specs i7 32gb ram 1024gb ssd rtx 4070 ti",
+      "name": "fdsafsd",
+      "price": 324234,
+      "specs": "dsfsdf",
       "images": [
-        "/uploadedImages/Products/fb2sbK9/images-1764419102058-765854095.png"
+        "/uploadedImages/Products/-3-d3uw/images-1764526336314-410554621.jpeg"
       ],
+      "category": "Mouse",
       "isDeleted": false,
-      "id": "fb2sbK9"
+      "id": "-3-d3uw"
     }
   ]
 }

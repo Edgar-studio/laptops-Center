@@ -18,13 +18,14 @@ export const fetchProducts = createAsyncThunk(
 // Register new product (with images array)
 export const registerProduct = createAsyncThunk(
     "products/registerProduct",
-    async ({ newProdName, price, specs, images = [] }, { rejectWithValue }) => {
+    async ({ newProdName, price, category, specs, images = [] }, { rejectWithValue }) => {
         try {
             const response = await api.post("/products", {
                 name: newProdName,
                 price,
                 specs: specs || null,
                 images,
+                category,
                 isDeleted: false,
             });
             notify("Product registered successfully", "green");
