@@ -8,8 +8,12 @@ import Products from "../Pages/Private Pages/Products.jsx";
 import UsersControl from "../Pages/Admin Pages/UsersControl.jsx";
 import ProductsControl from "../Pages/Admin Pages/ProductsControl.jsx";
 import ProductItemPage from "../Pages/Private Pages/ProductItemPage.jsx";
+import Weather from "../Pages/Private Pages/Weather.jsx";
 import {BiHome} from "react-icons/bi";
 import {Clock, Info} from "lucide-react";
+import {SiAccuweather} from "react-icons/si";
+import {PiRobotDuotone} from "react-icons/pi";
+import {CgProductHunt} from "react-icons/cg";
 
 
 export const LOGIN_PAGE = "/login"
@@ -20,6 +24,7 @@ export const HOME_PAGE = "/"
 export const ABOUT_PAGE = "/about"
 export const HISTORY_PAGE = "/history"
 export const PRODUCTS_PAGE = "/products"
+export const WEATHER_PAGE = "/weather"
 
 
 export const USERS_CONTROL_PAGE = "/userscontrol"
@@ -37,9 +42,11 @@ export const Private_routes = [
     {path: HOME_PAGE, element: <Home />, name: "Home", icon: <BiHome size={20} /> },
     {path: ABOUT_PAGE, element: <About />, name: "About", icon: <Info size={20}/> },
     {path: HISTORY_PAGE, element: <History />, name: "History", icon: <Clock size={20} /> },
+    {path: WEATHER_PAGE, element: <Weather />, name: "Weather", icon: <SiAccuweather size={20} /> },
     {
         path: PRODUCTS_PAGE,
         name: "Products" ,
+        icon: <CgProductHunt size={20} />,
         children: [
             {
                 index: true,

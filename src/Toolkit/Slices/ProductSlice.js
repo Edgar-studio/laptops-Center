@@ -2,7 +2,6 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import api from "../../api/api.js";
 import { notify } from "../../Components/UI/notify.jsx";
 
-// Fetch all products
 export const fetchProducts = createAsyncThunk(
     "products/fetchProducts",
     async (_, { rejectWithValue }) => {
@@ -15,7 +14,6 @@ export const fetchProducts = createAsyncThunk(
     }
 );
 
-// Register new product (with images array)
 export const registerProduct = createAsyncThunk(
     "products/registerProduct",
     async ({ newProdName, price, category, specs, images = [] }, { rejectWithValue }) => {
@@ -38,7 +36,6 @@ export const registerProduct = createAsyncThunk(
     }
 );
 
-// Soft delete product
 export const deleteProduct = createAsyncThunk(
     "products/deleteProduct",
     async (id, { rejectWithValue }) => {
@@ -51,7 +48,18 @@ export const deleteProduct = createAsyncThunk(
     }
 );
 
-// Restore deleted product
+export const hardDeleteProduct = createAsyncThunk(
+    "products/hardDeleteProduct",
+    async (productId, { rejectWithValue }) => {
+        try {
+            await api.delete(`/products/${productId}`);
+            return productId;
+        } catch (err) {
+            return rejectWithValue(err.response?.data || err.message);
+        }
+    }
+);
+
 export const returnProduct = createAsyncThunk(
     "products/returnProduct",
     async (id, { rejectWithValue }) => {
@@ -64,7 +72,6 @@ export const returnProduct = createAsyncThunk(
     }
 );
 
-// ProductSlice.js-ում ավելացրու
 export const updateProduct = createAsyncThunk("products/updateProduct",
     async ({id, data}, {rejectWithValue}) => {
         try {
@@ -76,8 +83,16 @@ export const updateProduct = createAsyncThunk("products/updateProduct",
     }
 )
 
-    // extraReducers-ում ավելացրու
-
+export const editProduct = createAsyncThunk("products/editProduct",
+    async (id, { rejectWithValue }) => {
+    try {
+        const response = await api.patch(`/products/${id}`, { isEdited: false });
+        return response.data;
+    } catch (err) {
+        return rejectWithValue(err.message)
+    }
+}
+)
 
 const productsSlice = createSlice({
     name: "products",
@@ -90,7 +105,6 @@ const productsSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
-            // === FETCH PRODUCTS ===
             .addCase(fetchProducts.pending, (state) => {
                 state.loading = true;
                 state.error = null;
@@ -106,7 +120,6 @@ const productsSlice = createSlice({
                 state.error = action.payload;
             })
 
-            // === REGISTER PRODUCT ===
             .addCase(registerProduct.pending, (state) => {
                 state.loading = true;
             })
@@ -120,13 +133,13 @@ const productsSlice = createSlice({
                 state.loading = false;
                 state.error = action.payload;
             })
+
             .addCase(updateProduct.fulfilled, (state, action) => {
                 state.products = state.products.map(product =>
                     product.id === action.payload.id ? action.payload : product
                 );
             })
 
-            // === DELETE PRODUCT ===
             .addCase(deleteProduct.pending, (state) => {
                 state.loading = true;
             })
@@ -145,7 +158,6 @@ const productsSlice = createSlice({
                 state.error = action.payload;
             })
 
-            // === RETURN PRODUCT ===
             .addCase(returnProduct.pending, (state) => {
                 state.loading = true;
             })
@@ -163,8 +175,28 @@ const productsSlice = createSlice({
             .addCase(returnProduct.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
-            });
-    },
+            })
+
+            .addCase(editProduct.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(editProduct.fulfilled, (state, action) => {
+                state.loading = false;
+                state.products = state.products.map(product =>
+                    product.id === action.payload.id ? { ...product, ...action.payload } : product
+                );
+            })
+            .addCase(editProduct.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
+            })
+            .addCase(hardDeleteProduct.fulfilled, (state, action) => {
+                 state.deletedProducts = state.deletedProducts.filter(
+                 (product) => product.id !== action.payload
+            );
+        });
+    }
+
 });
 
 export default productsSlice.reducer;

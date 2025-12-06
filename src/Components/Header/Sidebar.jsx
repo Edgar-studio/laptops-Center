@@ -1,15 +1,21 @@
-import React from "react";
+import React, {useEffect} from "react";
 import SidebarLib from "react-sidebar";
 import {AlignLeft } from "lucide-react";
 import Menu from "./Menu.jsx";
 import {logout} from "../../Toolkit/Slices/AuthSlice.js";
 import {useDispatch} from "react-redux";
-
-
+import {useLocation} from "react-router-dom";
 
 const MySidebar = ({ toggle, open }) => {
     const dispatch = useDispatch();
     const token = localStorage.getItem("token");
+    const location = useLocation()
+
+    useEffect(() => {
+        if (open) {
+            toggle(false);
+        }
+    }, [location.pathname]);
 
     return (
         <>

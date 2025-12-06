@@ -6,8 +6,9 @@ import {
     returnProduct,
     registerProduct,
     updateProduct,
+    hardDeleteProduct,
 } from "../../Toolkit/Slices/ProductSlice.js";
-import { FaTrash, FaUndo, FaPlus, FaMinus } from "react-icons/fa";
+import {FaTrash, FaUndo, FaPlus, FaMinus, FaEdit} from "react-icons/fa";
 import { notify } from "../../Components/UI/notify.jsx";
 import { useForm } from "react-hook-form";
 import {
@@ -29,6 +30,7 @@ const ProductsControl = () => {
 
     const [showForm, setShowForm] = useState(false);
     const [uploading, setUploading] = useState(false);
+    const [editingProduct, setEditingProduct] = useState(null);
 
     const {
         register,
@@ -40,6 +42,38 @@ const ProductsControl = () => {
     useEffect(() => {
         dispatch(fetchProducts());
     }, [dispatch]);
+
+    const handleEditClick = (product) => {
+        setEditingProduct({
+            ...product,
+        });
+    };
+
+    const handleEditSubmit = async (e) => {
+        e.preventDefault();
+        if (!editingProduct.name || !editingProduct.price) {
+            notify("Name and price are required", "red");
+            return;
+        }
+
+        try {
+            await dispatch(updateProduct({
+                id: editingProduct.id,
+                data: {
+                    name: editingProduct.name,
+                    price: Number(editingProduct.price),
+                    specs: editingProduct.specs,
+                    images: editingProduct.images || [],
+                }
+            })).unwrap();
+
+            notify("Product updated successfully", "green");
+            setEditingProduct(null);
+            dispatch(fetchProducts());
+        } catch (err) {
+            notify(err.message || "Failed to update product", "red");
+        }
+    };
 
     const handleDelete = (product) => {
         if (window.confirm(`Delete "${product.name}"?`)) {
@@ -54,12 +88,6 @@ const ProductsControl = () => {
 
     const handleAddProduct = async (data) => {
         const { newProdName, price, specs, category } = data;
-        // console.log(category)
-        //
-        // console.log('🚀 Starting product registration...');
-        // console.log('Form data:', { newProdName, price, specs });
-        // console.log('Images count:', images.length);
-
         if (!newProdName || !price || images.length === 0) {
             notify("Please fill all fields and upload at least one image", "red");
             return;
@@ -69,7 +97,6 @@ const ProductsControl = () => {
         let registeredProductId = null;
 
         try {
-            // ====== ШАГ 1: Ստեղծել ապրանքը առանց նկարների ======
             console.log('📝 Step 1: Creating product without images...');
             const registerResult = await dispatch(
                 registerProduct({
@@ -77,14 +104,12 @@ const ProductsControl = () => {
                     price: Number(price),
                     specs: specs || null,
                     category,
-                    images: [], // Ժամանակավոր դատարկ
+                    images: [],
                 })
             ).unwrap();
 
             registeredProductId = registerResult.id;
             console.log('✅ Product created with ID:', registeredProductId);
-
-            // ====== ШАГ 2: Վերբեռնել նկարները ======
             console.log('📤 Step 2: Uploading images...');
             const formData = new FormData();
 
@@ -113,7 +138,6 @@ const ProductsControl = () => {
             const uploadData = await uploadResponse.json();
             console.log('✅ Images uploaded:', uploadData.images);
 
-            // ====== ШАГ 3: Թարմացնել ապրանքը նկարներով ======
             console.log('🔄 Step 3: Updating product with images...');
             await dispatch(
                 updateProduct({
@@ -125,21 +149,17 @@ const ProductsControl = () => {
             ).unwrap();
 
             console.log('✅ Product updated successfully!');
-            // notify("Product registered with images!", "green");
 
-            // Reset form
             reset();
             setImages([]);
             setShowForm(false);
 
-            // Reload products
             dispatch(fetchProducts());
 
         } catch (err) {
             console.error("❌ Product registration failed:", err);
             notify(err.message || "Failed to register product", "red");
 
-            // Rollback: ջնջել ապրանքը, եթե ստեղծվել է
             if (registeredProductId) {
                 console.log('🔄 Rolling back - deleting product:', registeredProductId);
                 try {
@@ -180,7 +200,6 @@ const ProductsControl = () => {
                 </div>
             )}
 
-            {/* Add Product Button */}
             <div className="flex justify-end mb-6">
                 <button
                     onClick={() => setShowForm(!showForm)}
@@ -198,7 +217,6 @@ const ProductsControl = () => {
                 </button>
             </div>
 
-            {/* Add Product Form */}
             {showForm && (
                 <form
                     onSubmit={handleSubmit(handleAddProduct)}
@@ -289,11 +307,7 @@ const ProductsControl = () => {
                             )}
                         </div>
 
-                        {/* Form Fields */}
                         <div className="col-span-2 space-y-4">
-
-
-
                             <select
                                {...register("category")}
                             >
@@ -301,9 +315,6 @@ const ProductsControl = () => {
                                 <option value="Mouse">Mouse</option>
                                 <option value="Keyboard">Keyboard</option>
                             </select>
-
-
-
                             <InputNewProd
                                 type="text"
                                 placeholder="Product Name *"
@@ -312,8 +323,6 @@ const ProductsControl = () => {
                                 validation={productNameValidation}
                                 error={errors.newProdName?.message}
                             />
-
-
                             <InputNewProd
                                 type="text"
                                 placeholder="Price *"
@@ -322,7 +331,6 @@ const ProductsControl = () => {
                                 validation={productPriceValidation}
                                 error={errors.price?.message}
                             />
-
                             <InputNewProd
                                 type="text"
                                 placeholder="Specs (optional)"
@@ -348,7 +356,6 @@ const ProductsControl = () => {
                 </form>
             )}
 
-            {/* Registered Products */}
             <div className="mb-12">
                 <h2 className="text-2xl font-semibold mb-4 text-gray-800">
                     Registered Products ({products.length})
@@ -368,7 +375,7 @@ const ProductsControl = () => {
                                         alt={product.name}
                                         className="w-full h-48 object-cover rounded-md mb-4 bg-gray-200"
                                         onError={(e) => {
-                                            e.target.onerror = null; // Կանխել loop-ը
+                                            e.target.onerror = null;
                                             e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="200"%3E%3Crect fill="%23ddd" width="300" height="200"/%3E%3Ctext fill="%23999" font-family="sans-serif" font-size="16" x="50%25" y="50%25" text-anchor="middle" dy=".3em"%3ENo Image%3C/text%3E%3C/svg%3E';
                                         }}
                                     />
@@ -392,17 +399,80 @@ const ProductsControl = () => {
                                 )}
                                 <button
                                     onClick={() => handleDelete(product)}
-                                    className="w-full flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition"
+                                    className="w-full flex items-center justify-center gap-2 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition mt-2"
                                 >
                                     <FaTrash /> Delete
                                 </button>
+
+                                <button
+                                    onClick={() => handleEditClick(product)}
+                                    className="w-full flex items-center justify-center gap-2 bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg transition mt-2"
+                                >
+                                    <FaEdit /> Edit
+                                </button>
+
                             </div>
                         ))}
                     </div>
                 )}
             </div>
 
-            {/* Deleted Products */}
+            {editingProduct && (
+                <div className="fixed inset-0 backdrop-blur-2xl bg-opacity-50 flex items-center justify-center z-50">
+                    <form
+                        onSubmit={handleEditSubmit}
+                        className="bg-white p-6 rounded-xl shadow-lg w-full max-w-md"
+                    >
+                        <h3 className="text-xl font-semibold mb-4">Edit Product</h3>
+
+                        <input
+                            type="text"
+                            value={editingProduct.name}
+                            onChange={(e) =>
+                                setEditingProduct({ ...editingProduct, name: e.target.value })
+                            }
+                            placeholder="Product Name *"
+                            className="w-full mb-3 px-3 py-2 border rounded"
+                        />
+
+                        <input
+                            type="number"
+                            value={editingProduct.price}
+                            onChange={(e) =>
+                                setEditingProduct({ ...editingProduct, price: e.target.value })
+                            }
+                            placeholder="Price *"
+                            className="w-full mb-3 px-3 py-2 border rounded"
+                        />
+
+                        <input
+                            type="text"
+                            value={editingProduct.specs || ""}
+                            onChange={(e) =>
+                                setEditingProduct({ ...editingProduct, specs: e.target.value })
+                            }
+                            placeholder="Specs (optional)"
+                            className="w-full mb-3 px-3 py-2 border rounded"
+                        />
+
+                        <div className="flex justify-between mt-4">
+                            <button
+                                type="button"
+                                onClick={() => setEditingProduct(null)}
+                                className="px-4 py-2 bg-gray-400 hover:bg-gray-500 text-white rounded"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                type="submit"
+                                className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded"
+                            >
+                                Save
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            )}
             {deletedProducts.length > 0 && (
                 <div>
                     <h2 className="text-2xl font-semibold mb-4 text-gray-800">
@@ -420,7 +490,7 @@ const ProductsControl = () => {
                                         alt={product.name}
                                         className="w-full h-48 object-cover rounded-md mb-4"
                                         onError={(e) => {
-                                            e.target.onerror = true; // Կանխել loop-ը
+                                            e.target.onerror = true;
                                             e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="200"%3E%3Crect fill="%23ddd" width="300" height="200"/%3E%3Ctext fill="%23999" font-family="sans-serif" font-size="16" x="50%25" y="50%25" text-anchor="middle" dy=".3em"%3ENo Image%3C/text%3E%3C/svg%3E';
                                         }}
                                     />
@@ -440,6 +510,18 @@ const ProductsControl = () => {
                                 >
                                     <FaUndo /> Restore
                                 </button>
+                                <button
+                                    onClick={() => {
+                                        if(window.confirm(`Are you sure you want to permanently delete "${product.name}"?`)) {
+                                            dispatch(hardDeleteProduct(product.id));
+                                            notify("Product permanently deleted", "red", "2000");
+                                        }
+                                    }}
+                                    className="w-full flex items-center justify-center gap-2 bg-red-700 hover:bg-red-800 text-white px-4 py-2 rounded-lg transition mt-2"
+                                >
+                                    Hard Delete
+                                </button>
+
                             </div>
                         ))}
                     </div>

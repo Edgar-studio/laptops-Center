@@ -29,13 +29,6 @@
   ],
   "products": [
     {
-      "id": "1",
-      "name": "Dell XPS 15",
-      "price": "1499",
-      "specs": "i7, 16GB RAM, 512GB SSD, RTX 3050",
-      "isDeleted": false
-    },
-    {
       "id": "2",
       "name": "MacBook Pro 14",
       "price": "1999",
@@ -65,7 +58,7 @@
     {
       "name": "Hisense",
       "price": 123123,
-      "specs": "wfdsasfasf",
+      "specs": "sfaa",
       "images": [
         "/uploadedImages/Products/C2cvORv/images-1764525077940-758047139.jpeg"
       ],
@@ -101,14 +94,6 @@
       ],
       "isDeleted": false,
       "id": "0Ue3sO8"
-    },
-    {
-      "name": "sdgsdg",
-      "price": 2352345,
-      "specs": "dasgfsdgfsdg",
-      "images": [],
-      "isDeleted": true,
-      "id": "UJaQw0J"
     },
     {
       "name": "sdgsdg",
